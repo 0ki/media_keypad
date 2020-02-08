@@ -4,13 +4,32 @@
 # https://kirils.org/
 #
 
+## START SETTINGS ##
+
+media_app = "rhythmbox"
+
+input_device = "/dev/input/by-id/usb-SEM_HCT_Keyboard-event-kbd"
+device_grab_blink = 5 # times
+device_grab_retry_delay = 10 # seconds
+ignore_key_repeat = False
+
+volume_scale_master = 100
+volume_scale_app = 1
+max_volume_master = 100
+max_volume_app = 1.95
+volume_step = 0.025 # in scale 0 .. 1
+
+default_playback_rate = 1.0
+seek_time = 1 # seconds
+
+## END SETTINGS ##
+
 from evdev import InputDevice, ecodes as e
 import time
 import dbus
 import alsaaudio
 import os
 
-# TODO: move config strings and constants to top
 
 class dummy:
 	def Get(*args):
@@ -52,7 +71,7 @@ def set_rate(rate):
 		return False
 		
 	if rate==0:
-		setpoint=1.0
+		setpoint=default_playback_rate
 	else:
 		setpoint=rc+rate
 	
@@ -70,7 +89,7 @@ def set_volume(vol,master_mixer):
 		if vol==0:
 			mixer.setmute(not cur_mute)
 		else:
-			setpoint= max(min(int(cur_vol + vol*100),100),0)
+			setpoint= max(min(int(cur_vol + vol*volume_scale_master),max_volume_master),0)
 			mixer.setvolume(setpoint)
 	else:
 		cur_vol=player_call().Get('org.mpris.MediaPlayer2.Player', 'Volume')
@@ -80,7 +99,7 @@ def set_volume(vol,master_mixer):
 			last_vol=cur_vol
 			player_call().Set('org.mpris.MediaPlayer2.Player', 'Volume',vol)
 		else:
-			setpoint= max(min(cur_vol + vol,1.95),0)
+			setpoint= max(min(cur_vol + vol*volume_scale_app,max_volume_app),0.0)
 			player_call().Set('org.mpris.MediaPlayer2.Player', 'Volume',setpoint)
 
 	
@@ -113,7 +132,7 @@ def select_service(delta=0):
 
 device = None
 bus = dbus.SessionBus()
-last_vol=1.0
+last_vol=1.0 * volume_scale_app
 mixer = alsaaudio.Mixer()
 service_index=0	
 service = ""
@@ -126,7 +145,7 @@ while True:
 	
 	if not device:
 		try:
-			device = InputDevice("/dev/input/by-id/usb-SEM_HCT_Keyboard-event-kbd") # spec numpad
+			device = InputDevice(input_device) # spec numpad
 		except FileNotFoundError:
 			print("not connected")
 		except PermissionError:
@@ -135,13 +154,14 @@ while True:
 			print("some other error")
 
 		if not device:
-			time.sleep(10)
+			time.sleep(device_grab_retry_delay)
 			continue
 		
 		print("found device")
-		for led in range(0,50):
-			device.set_led(e.LED_NUML, not led % 10)
-			time.sleep(0.1)
+		if int(device_grab_blink)>0:
+			for led in range(0,int(device_grab_blink)*5):
+				device.set_led(e.LED_NUML, not led % 5)
+				time.sleep(0.1)
 		
 		device.set_led(e.LED_NUML,1)
 		device.grab()
@@ -149,7 +169,6 @@ while True:
 		
 		#while not select_service():
 		#	time.sleep(5)
-
 	
 		print("device ready")
 	
@@ -157,11 +176,10 @@ while True:
 		for event in device.read_loop():
 			
 			if event.type == e.EV_KEY:
-				if event.value == 1 or event.value == 2: #key_down or key_repeat
-
+				if event.value == 1 or (not ignore_key_repeat and event.value == 2): #key_down or key_repeat
 
 					if event.code == key.at[1][3]:
-						os.system("rhythmbox & ")
+						os.system(media_app+" & ")
 						continue
 
 
@@ -170,11 +188,11 @@ while True:
 						continue
 						
 					if event.code == key.at[3][4]:
-						set_volume(-0.025,0 in device.leds())
+						set_volume(-volume_step,0 in device.leds())
 						continue
 						
 					if event.code == key.at[2][4]:
-						set_volume(+0.025,0 in device.leds())
+						set_volume(+volume_step,0 in device.leds())
 						continue
 
 			
@@ -186,7 +204,6 @@ while True:
 						if not select_service(): #select a different service
 							break # goto sleep if not possible
 
-											
 					if event.code == key.at[6][3]:
 						player_call('Next')
 					if event.code == key.at[6][2]:
@@ -198,11 +215,10 @@ while True:
 #					if event.code == key.at[6][5]:
 #						player_call('Play')
 
-						
 					if event.code == key.at[5][1]:
-						player_call('Seek',-1000000) # 1 sec
+						player_call('Seek',-seek_time*1000000) # 1 sec
 					if event.code == key.at[5][3]:
-						player_call('Seek',+1000000) # 1 sec
+						player_call('Seek',+seek_time*1000000) # 1 sec
 						
 					if event.code == key.at[2][2]: #loop
 						loop = (loop + 1) % len(looptypes)
@@ -212,7 +228,7 @@ while True:
 						shuffle = not shuffle
 						player_call().Set('org.mpris.MediaPlayer2.Player', 'Shuffle',shuffle)				
 
-					if event.code == key.at[4][1]:
+					if event.code == key.at[4][1]: # rate steps are hardcoded as aligning custom rate steps is a PITA
 						set_rate(-0.1)
 					if event.code == key.at[4][3]:
 						set_rate(+0.1)
@@ -232,6 +248,6 @@ while True:
 		print("device is gone")
 		continue
 	except Exception as err:
-		print("i'm a daemon. stubbornly refusing to die even though ",err)
+		print("i'm a daemon. stubbornly refusing to die even though:",err)
 
 done
