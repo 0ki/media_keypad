@@ -1,5 +1,6 @@
 # media_keypad
 Turn your USB numpad into a full-fledged media (or other custom) keypad.
+
 ![Design](/design.png) ![Finished device](/product.jpg)
 
 **Q**: How is this better than multimedia keys I have on my out-of-the-box keyboard?
