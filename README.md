@@ -14,6 +14,9 @@ Current this only supports unix systems with dbus and alsa. I don't think I'll b
 
 ## Installation
 
+1. `sudo apt-get install libasound2-dev` (debian)
+1. `sudo apt-get install python3-evdev` (debian)
+1. `python3 -m pip install pyalsaaudio `
 1. Copy `30-media-keypad.rules` to `/etc/udev/rules.d`
 1. Make sure that your user is in the group `plugdev`
 1. Modify `media_keypad.py` according to your preferences, layout, apps
