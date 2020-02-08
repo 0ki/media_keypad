@@ -1,6 +1,14 @@
 # media_keypad
-Turn your USB numpad into a full-fledged media keypad
+Turn your USB numpad into a full-fledged media (or other custom) keypad.
 
+**Q**: How is this better than multimedia keys I have on my out-of-the-box keyboard?
+
+**A**: This method provides:
+* is a separate sattelite controller
+* has way more keys, e.g. adjustment of playback speed
+* allows to control volume of each app (even the background ones) seperately
+* allows for custom actions
+* works even with computer locked
 
 Current this only supports unix systems with dbus and alsa. I don't think I'll be spending time porting this, but pull requests adding support are welcome.
 
@@ -12,7 +20,7 @@ Current this only supports unix systems with dbus and alsa. I don't think I'll b
 1. Add `media_keypad.py` to startup applications for your user session
 
 
-## What's here
+## What's where
 
 **experiments** contain alternative ways that you may try to get this to work
 
