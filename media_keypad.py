@@ -10,7 +10,6 @@ import dbus
 import alsaaudio
 import os
 
-# TODO: shuffle buttons around
 # TODO: move config strings and constants to top
 
 class dummy:
@@ -30,7 +29,7 @@ def player_call(fun=None,arg=None):
 				return getattr(dbus.SessionBus().get_object(service,'/org/mpris/MediaPlayer2'),fun)(dbus_interface='org.mpris.MediaPlayer2.Player')
 			else:
 				return getattr(dbus.SessionBus().get_object(service,'/org/mpris/MediaPlayer2'),fun)(arg,dbus_interface='org.mpris.MediaPlayer2.Player')
-	except ValueError:
+	except:
 		return dummy()
 
 def set_rate(rate):
@@ -71,10 +70,7 @@ def set_volume(vol,master_mixer):
 		else:
 			setpoint= max(min(cur_vol + vol,1.95),0)
 			player_call().Set('org.mpris.MediaPlayer2.Player', 'Volume',setpoint)
-	
-	
-	
-	
+
 	
 def select_service(delta=0):
 	global service,service_index,loop,shuffle
@@ -103,54 +99,59 @@ def select_service(delta=0):
 	return True
 	
 
+
+device = None
+bus = dbus.SessionBus()
+last_vol=1.0
+mixer = alsaaudio.Mixer()
+service_index=0	
+service = ""
+
+looptypes=["None","Track","Playlist"]
+loop = 0
+shuffle = 0
+
 while True:
-	device = None
-	bus = dbus.SessionBus()
-	last_vol=1.0
-	mixer = alsaaudio.Mixer()
-	service_index=0	
-	service = ""
 	
-	looptypes=["None","Track","Playlist"]
-	loop = 0
-	shuffle = 0
-	try:
-		device = InputDevice("/dev/input/by-id/usb-SEM_HCT_Keyboard-event-kbd") # spec numpad
-	except FileNotFoundError:
-		print("not connected")
-	except PermissionError:
-		print("needs root")
-	except:
-		print("some other error")
-
 	if not device:
-		time.sleep(30)
-		continue
+		try:
+			device = InputDevice("/dev/input/by-id/usb-SEM_HCT_Keyboard-event-kbd") # spec numpad
+		except FileNotFoundError:
+			print("not connected")
+		except PermissionError:
+			print("needs root")
+		except:
+			print("some other error")
+
+		if not device:
+			time.sleep(10)
+			continue
+		
+		print("found device")
+		for led in range(0,50):
+			device.set_led(e.LED_NUML, not led % 10)
+			time.sleep(0.1)
+		
+		device.set_led(e.LED_NUML,1)
+		device.grab()
 	
-	print("found device")
-	for led in range(0,50):
-		device.set_led(e.LED_NUML, not led % 10)
-		time.sleep(0.1)
-	
-	device.set_led(e.LED_NUML,1)
-	device.grab()
-	
-	
-	#while not select_service():
-	#	time.sleep(5)
+		
+		#while not select_service():
+		#	time.sleep(5)
 
 	
-	print("device ready")
+		print("device ready")
 	
-	# TODO: define constats for readability?
+	# TODO: define constants for readability?
 	
 	#   MAPPING
-	# xx xx 15 xx
-	# 69 98 55 14
-	# 71 72 73 74
-	# 75 76 77 78
-	# 79[80]81 96
-	# 82[57]83 96
+	#   $1 $2 $3 $4
+	# $1 xx xx 15 xx
+	# $2 69 98 55 14
+	# $3 71(72)73 74
+	# $4 75 76 77 78
+	# $5 79(80)81 96
+	# $6 82 57 83 96
 	try:
 		for event in device.read_loop():
 			
@@ -163,15 +164,15 @@ while True:
 						continue
 
 
-					if event.code == 14:
+					if event.code == 78:
 						set_volume(0.0,0 in device.leds())
 						continue
 						
-					if event.code == 74: #swap these later
+					if event.code == 74:
 						set_volume(-0.025,0 in device.leds())
 						continue
 						
-					if event.code == 78: #swap these later
+					if event.code == 14:
 						set_volume(+0.025,0 in device.leds())
 						continue
 
@@ -186,15 +187,15 @@ while True:
 							break # goto sleep if not possible
 
 											
-					if event.code == 77:
+					if event.code == 83:
 						player_call('Next')
-					if event.code == 76:
+					if event.code == 57:
 						player_call('Stop')
-					if event.code == 75:
+					if event.code == 82:
 						player_call('Previous')
 					if event.code == 96:
 						player_call('PlayPause')
-#					if event.code == 57:
+#					if event.code == 80:
 #						player_call('Play')
 
 						
@@ -211,25 +212,26 @@ while True:
 						shuffle = not shuffle
 						player_call().Set('org.mpris.MediaPlayer2.Player', 'Shuffle',shuffle)
 					
-					if event.code == 71:
+					if event.code == 75:
 						set_rate(-0.1)
-					if event.code == 73:
+					if event.code == 77:
 						set_rate(+0.1)
-					if event.code == 72:
+					if event.code == 76:
 						set_rate(0)
 						
-					if event.code == 82:
+					if event.code == 71:
 						select_service(-1)
 
-					if event.code == 83:
+					if event.code == 73:
 						select_service(+1)
 
 					
 					
 	except OSError:
+		device = None
 		print("device is gone")
 		continue
-	except:
-		print("i'm a daemon. stubbornly refusing to die")
+	except Exception as err:
+		print("i'm a daemon. stubbornly refusing to die even though ",err)
 
 done
