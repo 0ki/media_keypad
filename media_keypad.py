@@ -18,8 +18,20 @@ class dummy:
 	
 	def Set(*args):
 		return None
-	
-	
+
+
+class key:	
+	at =[ #1x 2x 3x 4x
+		[],
+		[0,00,00,15,00], #x1
+		[0,69,98,55,14], #x2
+		[0,71,72,73,74], #x3
+		[0,75,76,77,78], #x4
+		[0,79,80,81,96], #x5 
+		[0,82,57,83,96], #x6	
+	]
+
+
 def player_call(fun=None,arg=None):
 	try:
 		if fun is None:
@@ -99,7 +111,6 @@ def select_service(delta=0):
 	return True
 	
 
-
 device = None
 bus = dbus.SessionBus()
 last_vol=1.0
@@ -142,87 +153,76 @@ while True:
 	
 		print("device ready")
 	
-	# TODO: define constants for readability?
-	
-	#   MAPPING
-	#   $1 $2 $3 $4
-	# $1 xx xx 15 xx
-	# $2 69 98 55 14
-	# $3 71(72)73 74
-	# $4 75 76 77 78
-	# $5 79(80)81 96
-	# $6 82 57 83 96
 	try:
 		for event in device.read_loop():
 			
 			if event.type == e.EV_KEY:
 				if event.value == 1 or event.value == 2: #key_down or key_repeat
-					
 
-					if event.code == 15:
+
+					if event.code == key.at[1][3]:
 						os.system("rhythmbox & ")
 						continue
 
 
-					if event.code == 78:
+					if event.code == key.at[4][4]:
 						set_volume(0.0,0 in device.leds())
 						continue
 						
-					if event.code == 74:
+					if event.code == key.at[3][4]:
 						set_volume(-0.025,0 in device.leds())
 						continue
 						
-					if event.code == 14:
+					if event.code == key.at[2][4]:
 						set_volume(+0.025,0 in device.leds())
 						continue
 
 			
-					if event.code == 69: # control master system (volume)
+					if event.code == key.at[2][1]: # control master system (volume)
 						device.set_led(e.LED_NUML,0 not in device.leds())
 						continue
 
-						
 					if not service in bus.list_names(): #service is gone
 						if not select_service(): #select a different service
 							break # goto sleep if not possible
 
 											
-					if event.code == 83:
+					if event.code == key.at[6][3]:
 						player_call('Next')
-					if event.code == 57:
+					if event.code == key.at[6][2]:
 						player_call('Stop')
-					if event.code == 82:
+					if event.code == key.at[6][1]:
 						player_call('Previous')
-					if event.code == 96:
+					if event.code == key.at[6][4]:
 						player_call('PlayPause')
-#					if event.code == 80:
+#					if event.code == key.at[6][5]:
 #						player_call('Play')
 
 						
-					if event.code == 79:
+					if event.code == key.at[5][1]:
 						player_call('Seek',-1000000) # 1 sec
-					if event.code == 81:
+					if event.code == key.at[5][3]:
 						player_call('Seek',+1000000) # 1 sec
 						
-					if event.code == 98: #loop
+					if event.code == key.at[2][2]: #loop
 						loop = (loop + 1) % len(looptypes)
 						player_call().Set('org.mpris.MediaPlayer2.Player', 'LoopStatus',looptypes[loop] )
 						
-					if event.code == 55: #shuffle
+					if event.code == key.at[2][3]: #shuffle
 						shuffle = not shuffle
-						player_call().Set('org.mpris.MediaPlayer2.Player', 'Shuffle',shuffle)
-					
-					if event.code == 75:
+						player_call().Set('org.mpris.MediaPlayer2.Player', 'Shuffle',shuffle)				
+
+					if event.code == key.at[4][1]:
 						set_rate(-0.1)
-					if event.code == 77:
+					if event.code == key.at[4][3]:
 						set_rate(+0.1)
-					if event.code == 76:
+					if event.code == key.at[4][2]:
 						set_rate(0)
 						
-					if event.code == 71:
+					if event.code == key.at[3][1]:
 						select_service(-1)
 
-					if event.code == 73:
+					if event.code == key.at[3][3]:
 						select_service(+1)
 
 					
