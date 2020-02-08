@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 512 512"
+   version="1.1"
+   id="svg10"
+   sodipodi:docname="13-music.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <metadata
+     id="metadata16">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs14" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1366"
+     inkscape:window-height="703"
+     id="namedview12"
+     showgrid="false"
+     inkscape:zoom="0.4609375"
+     inkscape:cx="256"
+     inkscape:cy="256"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg10" />
+  <path
+     d="M 361 83.851562 L 181 155.84766 L 181 307.06641 C 172.19141 303.30469 162.0625 301 151 301 C 117.35156 301 91 320.76172 91 346 C 91 371.23828 117.35156 391 151 391 C 184.64844 391 211 371.23828 211 346 L 211 236.14844 L 331 188.15234 L 331 277.06641 C 327.69678 275.65576 324.20885 274.45029 320.55469 273.49414 C 318.11858 272.8567 315.60823 272.33006 313.03125 271.92773 C 311.09851 271.62599 309.12712 271.39474 307.12109 271.23828 C 305.11507 271.08182 303.07422 271 301 271 C 299.88461 271 298.77835 271.0235 297.67969 271.06641 C 297.51253 271.07308 297.34837 271.08803 297.18164 271.0957 C 296.23977 271.13811 295.3034 271.19236 294.375 271.26562 C 294.24924 271.27577 294.12548 271.29007 294 271.30078 C 263.77 273.82598 241 292.54199 241 316 C 241 339.45801 263.77 358.17402 294 360.69922 C 294.12548 360.70993 294.24924 360.72423 294.375 360.73438 C 295.3034 360.80764 296.23977 360.86189 297.18164 360.9043 C 297.34837 360.91197 297.51253 360.92692 297.67969 360.93359 C 298.77835 360.9765 299.88461 361 301 361 C 334.64844 361 361 341.23828 361 316 L 361 83.851562 z "
+     id="path6" />
+</svg>

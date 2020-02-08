@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 512 512"
+   version="1.1"
+   id="svg1058"
+   sodipodi:docname="21-master.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <metadata
+     id="metadata1064">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs1062" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="640"
+     inkscape:window-height="480"
+     id="namedview1060"
+     showgrid="false"
+     inkscape:zoom="0.4609375"
+     inkscape:cx="256"
+     inkscape:cy="256"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="g1056" />
+  <path
+     d="m181 273.761719v-152.761719h-30v152.761719c-17.421875 6.214843-30 22.707031-30 42.238281s12.578125 36.023438 30 42.238281v32.761719h30v-32.761719c17.421875-6.214843 30-22.707031 30-42.238281s-12.578125-36.023438-30-42.238281zm0 0"
+     fill="#384949"
+     id="path1048"
+     style="fill:#000000" />
+  <path
+     d="m301 196c0-19.53125-12.578125-36.023438-30-42.238281v-32.761719h-30v32.761719c-17.421875 6.214843-30 22.707031-30 42.238281s12.578125 36.023438 30 42.238281v152.761719h30v-152.761719c17.421875-6.214843 30-22.707031 30-42.238281zm0 0"
+     fill="#384949"
+     id="path1050"
+     style="fill:#000000" />
+  <g
+     fill="#293939"
+     id="g1056">
+    <path
+       d="m361 273.761719v-152.761719h-30v152.761719c-17.421875 6.214843-30 22.707031-30 42.238281s12.578125 36.023438 30 42.238281v32.761719h30v-32.761719c17.421875-6.214843 30-22.707031 30-42.238281s-12.578125-36.023438-30-42.238281zm0 0"
+       id="path1054"
+       style="fill:#000000" />
+  </g>
+</svg>
