@@ -19,8 +19,11 @@ max_volume_master = 100
 max_volume_app = 1.95
 volume_step = 0.025 # in scale 0 .. 1
 
-default_playback_rate = 1.0
 seek_time = 1 # seconds
+default_playback_rate = 1.0
+rate_step = 0.1 # has to be between 0.0(disables func) and 1.0
+
+b_modifier = 10 # multiplication factor
 
 ## END SETTINGS ##
 
@@ -77,7 +80,12 @@ def set_rate(rate):
 	
 	setpoint=round(setpoint,1)
 	setpoint=min(r2,max(r1,setpoint))
-	player_call().Set('org.mpris.MediaPlayer2.Player', 'Rate',setpoint)
+	print(rate,setpoint)
+	try:
+		player_call().Set('org.mpris.MediaPlayer2.Player', 'Rate',setpoint)
+		return True
+	except:
+		return False
 	
 	
 def set_volume(vol,master_mixer):
@@ -136,6 +144,8 @@ last_vol=1.0 * volume_scale_app
 mixer = alsaaudio.Mixer()
 service_index=0	
 service = ""
+rate_step = max(0.0,min(1.0,round(rate_step,1)))
+buttons_pressed = []
 
 looptypes=["None","Track","Playlist"]
 loop = 0
@@ -144,6 +154,7 @@ shuffle = 0
 while True:
 	
 	if not device:
+		buttons_pressed = []
 		try:
 			device = InputDevice(input_device) # spec numpad
 		except FileNotFoundError:
@@ -176,6 +187,15 @@ while True:
 		for event in device.read_loop():
 			
 			if event.type == e.EV_KEY:
+				if event.value == 1:
+					if event.code not in buttons_pressed:
+						buttons_pressed.append(event.code)
+				if event.value == 0:
+					try:
+						del buttons_pressed[buttons_pressed.index(event.code)]
+					except:
+						pass
+				
 				if event.value == 1 or (not ignore_key_repeat and event.value == 2): #key_down or key_repeat
 
 					if event.code == key.at[1][3]:
@@ -216,9 +236,13 @@ while True:
 #						player_call('Play')
 
 					if event.code == key.at[5][1]:
-						player_call('Seek',-seek_time*1000000) # 1 sec
+						player_call('Seek',
+							-seek_time*(b_modifier if key.at[5][2] in buttons_pressed else 1)
+							*1000000)
 					if event.code == key.at[5][3]:
-						player_call('Seek',+seek_time*1000000) # 1 sec
+						player_call('Seek',
+							+seek_time*(b_modifier if key.at[5][2] in buttons_pressed else 1)
+							*1000000)
 						
 					if event.code == key.at[2][2]: #loop
 						loop = (loop + 1) % len(looptypes)
@@ -228,10 +252,10 @@ while True:
 						shuffle = not shuffle
 						player_call().Set('org.mpris.MediaPlayer2.Player', 'Shuffle',shuffle)				
 
-					if event.code == key.at[4][1]: # rate steps are hardcoded as aligning custom rate steps is a PITA
-						set_rate(-0.1)
+					if event.code == key.at[4][1]:
+						set_rate(-rate_step*(b_modifier if key.at[5][2] in buttons_pressed else 1))
 					if event.code == key.at[4][3]:
-						set_rate(+0.1)
+						set_rate(+rate_step*(b_modifier if key.at[5][2] in buttons_pressed else 1))
 					if event.code == key.at[4][2]:
 						set_rate(0)
 						
