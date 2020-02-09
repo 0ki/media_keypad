@@ -80,7 +80,7 @@ def set_rate(rate):
 	
 	setpoint=round(setpoint,1)
 	setpoint=min(r2,max(r1,setpoint))
-	print(rate,setpoint)
+	
 	try:
 		player_call().Set('org.mpris.MediaPlayer2.Player', 'Rate',setpoint)
 		return True
