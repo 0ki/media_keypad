@@ -5,12 +5,13 @@ Turn your USB numpad into a full-fledged media (or other custom) keypad.
 
 **Q**: How is this better than multimedia keys I have on my out-of-the-box keyboard?
 
-**A**: This method provides:
+**A**: This method:
 * is a separate sattelite controller
 * has way more keys, e.g. adjustment of playback speed
 * allows to control volume of each app (even the background ones) seperately
 * allows for custom actions
 * works even with computer locked
+* is not seen as keyboard input by the OS, so does not disturb your use of other keyboard or mouse
 
 Current this only supports unix systems with dbus and alsa. I don't think I'll be spending time porting this, but pull requests adding support for additional operating systems are welcome.
 
