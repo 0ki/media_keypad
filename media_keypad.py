@@ -208,11 +208,11 @@ while True:
 						continue
 						
 					if event.code == key.at[3][4]:
-						set_volume(-volume_step,0 in device.leds())
+						set_volume(-volume_step*(b_modifier if key.at[5][2] in buttons_pressed else 1),0 in device.leds())
 						continue
 						
 					if event.code == key.at[2][4]:
-						set_volume(+volume_step,0 in device.leds())
+						set_volume(+volume_step*(b_modifier if key.at[5][2] in buttons_pressed else 1),0 in device.leds())
 						continue
 
 			
