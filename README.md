@@ -12,7 +12,7 @@ Turn your USB numpad into a full-fledged media (or other custom) keypad.
 * allows for custom actions
 * works even with computer locked
 
-Current this only supports unix systems with dbus and alsa. I don't think I'll be spending time porting this, but pull requests adding support are welcome.
+Current this only supports unix systems with dbus and alsa. I don't think I'll be spending time porting this, but pull requests adding support for additional operating systems are welcome.
 
 ## Installation
 
