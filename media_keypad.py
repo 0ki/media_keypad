@@ -89,6 +89,8 @@ def set_rate(rate):
 	
 	
 def set_volume(vol,master_mixer):
+	#TODO: fixme - app cur_vol needs to be tracked per app
+	#TODO: when increasing volume after app mute, it should start at previous cur_vol
 	global last_vol
 	if master_mixer:
 		cur_vol = mixer.getvolume()
@@ -99,6 +101,8 @@ def set_volume(vol,master_mixer):
 		else:
 			setpoint= max(min(int(cur_vol + vol*volume_scale_master),max_volume_master),0)
 			mixer.setvolume(setpoint)
+			if vol>0:
+				mixer.setmute(0)
 	else:
 		cur_vol=player_call().Get('org.mpris.MediaPlayer2.Player', 'Volume')
 		if vol==0.0:
